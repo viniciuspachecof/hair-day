@@ -1,5 +1,11 @@
+import { CardTeste } from './components/CardTeste';
+
 function App() {
-  return <p>Olá mundo</p>;
+  return (
+    <>
+      <CardTeste />
+    </>
+  );
 }
 
 export default App;
