@@ -20,4 +20,17 @@
   --color-gray-900: #050505;
 
   --font-sans: 'Catamaran', sans-serif;
+
+  --text-title-lg: 24px;
+  --text-title-md: 16px;
+  --text-title-sm: 14px;
+  --text-md: 16px;
+  --text-sm: 14px;
+}
+
+@layer base {
+  body {
+    color: white;
+    background-color: #19181b;
+  }
 }
