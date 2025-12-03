@@ -1,6 +1,12 @@
-import { HoraAgendamento } from '../HoraAgendamento';
+import { useState } from 'react';
+import { containerHora } from './style';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { ptBR } from 'date-fns/locale';
 
 export function Header() {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+
   return (
     <div className="p-3 h-dvh">
       <div className="bg-gray-700 p-20 h-full max-w-[500px] rounded-xl">
@@ -12,12 +18,14 @@ export function Header() {
         <div className="flex flex-col gap-8 mb-6">
           <div>
             <p className="text-title-md text-gray-200 font-bold mb-2">Data</p>
-            <select name="cars" id="cars">
-              <option value="volvo">Volvo</option>
-              <option value="saab">Saab</option>
-              <option value="opel">Opel</option>
-              <option value="audi">Audi</option>
-            </select>
+            <DatePicker
+              toggleCalendarOnIconClick
+              selected={selectedDate}
+              onChange={setSelectedDate}
+              locale={ptBR}
+              dateFormat="dd/MM/yyyy"
+              className="p-3 border rounded-lg border-gray-500"
+            />
           </div>
 
           <div>
@@ -26,31 +34,33 @@ export function Header() {
               <div>
                 <span className="text-gray-300 text-sm">Manhã</span>
                 <div className="grid grid-cols-4 gap-2">
-                  <HoraAgendamento hora="09:00" status={true} />
-                  <HoraAgendamento hora="10:00" status={true} />
-                  <HoraAgendamento hora="11:00" status={false} />
-                  <HoraAgendamento hora="12:00" status={true} />
+                  {Array(4)
+                    .fill({ hora: '09:00', status: true })
+                    .map((obj) => (
+                      <span className={containerHora({ status: obj.status })}>{obj.hora}</span>
+                    ))}
                 </div>
               </div>
 
               <div>
                 <span className="text-gray-300 text-sm">Tarde</span>
                 <div className="grid grid-cols-4 gap-2">
-                  <HoraAgendamento hora="13:00" status={true} />
-                  <HoraAgendamento hora="14:00" status={true} />
-                  <HoraAgendamento hora="15:00" status={true} />
-                  <HoraAgendamento hora="16:00" status={false} />
-                  <HoraAgendamento hora="17:00" status={true} />
-                  <HoraAgendamento hora="18:00" status={true} />
+                  {Array(6)
+                    .fill({ hora: '13:00', status: true })
+                    .map((obj) => (
+                      <span className={containerHora({ status: obj.status })}>{obj.hora}</span>
+                    ))}
                 </div>
               </div>
 
               <div>
                 <span className="text-gray-300 text-sm">Noite</span>
                 <div className="flex grid-cols-4 gap-2">
-                  <HoraAgendamento hora="19:00" status={true} />
-                  <HoraAgendamento hora="20:00" status={false} />
-                  <HoraAgendamento hora="21:00" status={true} />
+                  {Array(3)
+                    .fill({ hora: '19:00', status: true })
+                    .map((obj) => (
+                      <span className={containerHora({ status: obj.status })}>{obj.hora}</span>
+                    ))}
                 </div>
               </div>
             </div>
@@ -58,12 +68,7 @@ export function Header() {
 
           <div>
             <p className="text-title-md text-gray-200 font-bold mb-2">Cliente</p>
-            <select name="cars" id="cars">
-              <option value="volvo">Volvo</option>
-              <option value="saab">Saab</option>
-              <option value="opel">Opel</option>
-              <option value="audi">Audi</option>
-            </select>
+            <input type="text" className="p-3 border rounded-lg border-gray-500 w-full" />
           </div>
         </div>
 
