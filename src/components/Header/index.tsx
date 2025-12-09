@@ -1,11 +1,22 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { containerHora } from './style';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ptBR } from 'date-fns/locale';
+import { HairDayContext } from '../../contexts/HairDayContext';
 
 export function Header() {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [date, setDate] = useState<Date | null>(new Date());
+  const [name, setName] = useState<string>('');
+
+  const { onAdicionarSchedulings } = useContext(HairDayContext);
+
+  function handleScheduling() {
+    const id = Math.random();
+    const hour = new Date();
+
+    onAdicionarSchedulings({ id, name, date, hour });
+  }
 
   return (
     <div className="p-3 h-dvh">
@@ -15,13 +26,13 @@ export function Header() {
           Selecione data, horário e informe o nome do cliente para criar o agendamento
         </p>
 
-        <div className="flex flex-col gap-8 mb-6">
+        <form className="flex flex-col gap-8 mb-6" onSubmit={handleScheduling}>
           <div>
             <p className="text-title-md text-gray-200 font-bold mb-2">Data</p>
             <DatePicker
               toggleCalendarOnIconClick
-              selected={selectedDate}
-              onChange={setSelectedDate}
+              selected={date}
+              onChange={setDate}
               locale={ptBR}
               dateFormat="dd/MM/yyyy"
               className="p-3 border rounded-lg border-gray-500"
@@ -68,13 +79,20 @@ export function Header() {
 
           <div>
             <p className="text-title-md text-gray-200 font-bold mb-2">Cliente</p>
-            <input type="text" className="p-3 border rounded-lg border-gray-500 w-full" />
+            <input
+              type="text"
+              className="p-3 border rounded-lg border-gray-500 w-full"
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
-        </div>
 
-        <button className="w-full bg-yellow text-gray-900 rounded-lg p-[18px] font-bold text-title-sm cursor-pointer border-2 border-transparent hover:border-yellow-light">
-          AGENDAR
-        </button>
+          <button
+            type="submit"
+            className="w-full bg-yellow text-gray-900 rounded-lg p-[18px] font-bold text-title-sm cursor-pointer border-2 border-transparent hover:border-yellow-light"
+          >
+            AGENDAR
+          </button>
+        </form>
       </div>
     </div>
   );

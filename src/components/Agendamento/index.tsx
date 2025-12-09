@@ -1,6 +1,11 @@
 import { CloudSunIcon, MoonStarsIcon, SunHorizonIcon, TrashIcon } from '@phosphor-icons/react';
+import { ptBR } from 'date-fns/locale';
+import { useState } from 'react';
+import DatePicker from 'react-datepicker';
 
 export default function Agendamento() {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+
   return (
     <div className="px-28 py-[92px] flex-1">
       <div className="flex items-start justify-between">
@@ -8,12 +13,14 @@ export default function Agendamento() {
           <p className="text-title-lg font-bold">Agende um atendimento</p>
           <p className="text-sm text-gray-300 leading-5 mb-6">Consulte os seus cortes de cabelo agendados por dia</p>
         </div>
-        <select name="cars" id="cars">
-          <option value="volvo">Volvo</option>
-          <option value="saab">Saab</option>
-          <option value="opel">Opel</option>
-          <option value="audi">Audi</option>
-        </select>
+        <DatePicker
+          toggleCalendarOnIconClick
+          selected={selectedDate}
+          onChange={setSelectedDate}
+          locale={ptBR}
+          dateFormat="dd/MM/yyyy"
+          className="p-3 border rounded-lg border-gray-500"
+        />
       </div>
 
       <div className="border border-gray-600 rounded-lg mb-3">
