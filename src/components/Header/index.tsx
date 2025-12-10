@@ -6,16 +6,17 @@ import { ptBR } from 'date-fns/locale';
 import { HairDayContext } from '../../contexts/HairDayContext';
 
 export function Header() {
-  const [date, setDate] = useState<Date | null>(new Date());
+  const [dateSelected, setDateSelected] = useState<Date | null>(new Date());
+  const [hourSelected, setHourSelected] = useState<string>();
   const [name, setName] = useState<string>('');
 
-  const { onAdicionarSchedulings } = useContext(HairDayContext);
+  const { onAdicionarSchedulingsAvailable } = useContext(HairDayContext);
 
   function handleScheduling() {
     const id = Math.random();
-    const hour = new Date();
+    console.log(hourSelected);
 
-    onAdicionarSchedulings({ id, name, date, hour });
+    onAdicionarSchedulingsAvailable({ id, date_time: dateSelected });
   }
 
   return (
@@ -31,8 +32,8 @@ export function Header() {
             <p className="text-title-md text-gray-200 font-bold mb-2">Data</p>
             <DatePicker
               toggleCalendarOnIconClick
-              selected={date}
-              onChange={setDate}
+              selected={dateSelected}
+              onChange={setDateSelected}
               locale={ptBR}
               dateFormat="dd/MM/yyyy"
               className="p-3 border rounded-lg border-gray-500"
@@ -46,9 +47,21 @@ export function Header() {
                 <span className="text-gray-300 text-sm">Manhã</span>
                 <div className="grid grid-cols-4 gap-2">
                   {Array(4)
-                    .fill({ hora: '09:00', status: true })
-                    .map((obj) => (
-                      <span className={containerHora({ status: obj.status })}>{obj.hora}</span>
+                    .fill({ hora: '13:00', status: true })
+                    .map((obj, index) => (
+                      <div className="grid">
+                        <input
+                          className="hidden peer"
+                          type="radio"
+                          id={`manha${index}`}
+                          name="my_choice"
+                          value={obj.hora}
+                          onChange={() => setHourSelected(obj.hora)}
+                        ></input>
+                        <label htmlFor={`manha${index}`} className={containerHora({ status: obj.status })}>
+                          {obj.hora}
+                        </label>
+                      </div>
                     ))}
                 </div>
               </div>
@@ -58,8 +71,20 @@ export function Header() {
                 <div className="grid grid-cols-4 gap-2">
                   {Array(6)
                     .fill({ hora: '13:00', status: true })
-                    .map((obj) => (
-                      <span className={containerHora({ status: obj.status })}>{obj.hora}</span>
+                    .map((obj, index) => (
+                      <div className="grid">
+                        <input
+                          className="hidden peer"
+                          type="radio"
+                          id={`tarde${index}`}
+                          name="my_choice"
+                          value={obj.hora}
+                          onChange={() => setHourSelected(obj.hora)}
+                        ></input>
+                        <label htmlFor={`tarde${index}`} className={containerHora({ status: obj.status })}>
+                          {obj.hora}
+                        </label>
+                      </div>
                     ))}
                 </div>
               </div>
@@ -69,8 +94,20 @@ export function Header() {
                 <div className="flex grid-cols-4 gap-2">
                   {Array(3)
                     .fill({ hora: '19:00', status: true })
-                    .map((obj) => (
-                      <span className={containerHora({ status: obj.status })}>{obj.hora}</span>
+                    .map((obj, index) => (
+                      <div className="grid">
+                        <input
+                          className="hidden peer"
+                          type="radio"
+                          id={`noite${index}`}
+                          name="my_choice"
+                          value={obj.hora}
+                          onChange={() => setHourSelected(obj.hora)}
+                        ></input>
+                        <label htmlFor={`noite${index}`} className={containerHora({ status: obj.status })}>
+                          {obj.hora}
+                        </label>
+                      </div>
                     ))}
                 </div>
               </div>
