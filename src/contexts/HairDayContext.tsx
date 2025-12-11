@@ -1,12 +1,11 @@
 import { createContext, useState, type ReactNode } from 'react';
 import type { IScheduling } from '../interface/IScheduling';
-import type { ISchedulingAvailable } from '../interface/ISchedulingAvailable';
 
 interface HairDayContextType {
   schedulings: IScheduling[];
-  schedulingsAvailable: ISchedulingAvailable[];
+  schedulingsAvailable: Date[];
   onAdicionarSchedulings: (data: IScheduling) => void;
-  onAdicionarSchedulingsAvailable: (data: ISchedulingAvailable) => void;
+  onAdicionarSchedulingsAvailable: (data: Date) => void;
   onRemoverSchedulings: (id: number) => void;
 }
 
@@ -18,13 +17,13 @@ interface HairDayContextProviderProps {
 
 export function HairDayContextProvider({ children }: HairDayContextProviderProps) {
   const [schedulings, setSchedulings] = useState<IScheduling[]>([]);
-  const [schedulingsAvailable, setSchedulingsAvailable] = useState<ISchedulingAvailable[]>([]);
+  const [schedulingsAvailable, setSchedulingsAvailable] = useState<Date[]>([]);
 
   function onAdicionarSchedulings(data: IScheduling) {
     setSchedulings((state) => [...state, data]);
   }
 
-  function onAdicionarSchedulingsAvailable(data: ISchedulingAvailable) {
+  function onAdicionarSchedulingsAvailable(data: Date) {
     setSchedulingsAvailable((state) => [...state, data]);
   }
 

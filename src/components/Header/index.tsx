@@ -1,22 +1,37 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState, type FormEvent } from 'react';
 import { containerHora } from './style';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ptBR } from 'date-fns/locale';
 import { HairDayContext } from '../../contexts/HairDayContext';
+import { startOfDay, isEqual } from 'date-fns';
+
+const horariosAgendamento = {
+  PeriodoManha: [9, 10, 11, 12],
+  PeriodoTarde: [13, 14, 15, 16, 17, 18],
+  PeriodoNoite: [19, 20, 21],
+};
 
 export function Header() {
-  const [dateSelected, setDateSelected] = useState<Date | null>(new Date());
-  const [hourSelected, setHourSelected] = useState<string>();
-  const [name, setName] = useState<string>('');
+  const [dateSelected, setDateSelected] = useState<Date>(startOfDay(new Date()));
+  const [hourSelected, setHourSelected] = useState<number>(0);
+  const [nameClient, setNameClient] = useState<string>('');
 
-  const { onAdicionarSchedulingsAvailable } = useContext(HairDayContext);
+  const { schedulings, onAdicionarSchedulings } = useContext(HairDayContext);
 
-  function handleScheduling() {
+  function handleScheduling(event: FormEvent) {
+    event.preventDefault();
+
+    if (!dateSelected) return;
+
     const id = Math.random();
-    console.log(hourSelected);
+    const formatData = startOfDay(dateSelected);
 
-    onAdicionarSchedulingsAvailable({ id, date_time: dateSelected });
+    formatData.setHours(hourSelected);
+
+    onAdicionarSchedulings({ id, date_time: formatData, client_name: nameClient });
+
+    setNameClient('');
   }
 
   return (
@@ -33,7 +48,13 @@ export function Header() {
             <DatePicker
               toggleCalendarOnIconClick
               selected={dateSelected}
-              onChange={setDateSelected}
+              onChange={(date) => {
+                if (!date) return;
+
+                const dataLimpa = startOfDay(date);
+                setDateSelected(dataLimpa);
+                setHourSelected(0);
+              }}
               locale={ptBR}
               dateFormat="dd/MM/yyyy"
               className="p-3 border rounded-lg border-gray-500"
@@ -46,69 +67,96 @@ export function Header() {
               <div>
                 <span className="text-gray-300 text-sm">Manhã</span>
                 <div className="grid grid-cols-4 gap-2">
-                  {Array(4)
-                    .fill({ hora: '13:00', status: true })
-                    .map((obj, index) => (
-                      <div className="grid">
+                  {horariosAgendamento.PeriodoManha.map((value, index) => {
+                    const dataHorarioExibicao = dateSelected;
+                    dataHorarioExibicao.setHours(value);
+
+                    const statusHora = schedulings.find((scheduling) => {
+                      return isEqual(dataHorarioExibicao, scheduling.date_time);
+                    });
+
+                    return (
+                      <div className="grid" key={index}>
                         <input
                           className="hidden peer"
                           type="radio"
                           id={`manha${index}`}
                           name="my_choice"
-                          value={obj.hora}
-                          onChange={() => setHourSelected(obj.hora)}
+                          value={value}
+                          onChange={() => setHourSelected(value)}
+                          disabled={!!statusHora}
+                          checked={hourSelected === value}
                         ></input>
-                        <label htmlFor={`manha${index}`} className={containerHora({ status: obj.status })}>
-                          {obj.hora}
+                        <label htmlFor={`manha${index}`} className={containerHora({ status: !statusHora })}>
+                          {String(value).padStart(2, '0') + ':00'}
                         </label>
                       </div>
-                    ))}
+                    );
+                  })}
                 </div>
               </div>
 
               <div>
                 <span className="text-gray-300 text-sm">Tarde</span>
                 <div className="grid grid-cols-4 gap-2">
-                  {Array(6)
-                    .fill({ hora: '13:00', status: true })
-                    .map((obj, index) => (
-                      <div className="grid">
+                  {horariosAgendamento.PeriodoTarde.map((value, index) => {
+                    const dataHorarioExibicao = dateSelected;
+                    dataHorarioExibicao.setHours(value);
+
+                    const statusHora = schedulings.find((scheduling) => {
+                      return isEqual(dataHorarioExibicao, scheduling.date_time);
+                    });
+
+                    return (
+                      <div className="grid" key={index}>
                         <input
                           className="hidden peer"
                           type="radio"
                           id={`tarde${index}`}
                           name="my_choice"
-                          value={obj.hora}
-                          onChange={() => setHourSelected(obj.hora)}
+                          value={value}
+                          onChange={() => setHourSelected(value)}
+                          disabled={!!statusHora}
+                          checked={hourSelected === value}
                         ></input>
-                        <label htmlFor={`tarde${index}`} className={containerHora({ status: obj.status })}>
-                          {obj.hora}
+                        <label htmlFor={`tarde${index}`} className={containerHora({ status: !statusHora })}>
+                          {String(value).padStart(2, '0') + ':00'}
                         </label>
                       </div>
-                    ))}
+                    );
+                  })}
                 </div>
               </div>
 
               <div>
                 <span className="text-gray-300 text-sm">Noite</span>
                 <div className="flex grid-cols-4 gap-2">
-                  {Array(3)
-                    .fill({ hora: '19:00', status: true })
-                    .map((obj, index) => (
-                      <div className="grid">
+                  {horariosAgendamento.PeriodoNoite.map((value, index) => {
+                    const dataHorarioExibicao = dateSelected;
+                    dataHorarioExibicao.setHours(value);
+
+                    const statusHora = schedulings.find((scheduling) => {
+                      return isEqual(dataHorarioExibicao, scheduling.date_time);
+                    });
+
+                    return (
+                      <div className="grid" key={index}>
                         <input
                           className="hidden peer"
                           type="radio"
                           id={`noite${index}`}
                           name="my_choice"
-                          value={obj.hora}
-                          onChange={() => setHourSelected(obj.hora)}
+                          value={value}
+                          onChange={() => setHourSelected(value)}
+                          disabled={!!statusHora}
+                          checked={hourSelected === value}
                         ></input>
-                        <label htmlFor={`noite${index}`} className={containerHora({ status: obj.status })}>
-                          {obj.hora}
+                        <label htmlFor={`noite${index}`} className={containerHora({ status: !statusHora })}>
+                          {String(value).padStart(2, '0') + ':00'}
                         </label>
                       </div>
-                    ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -119,7 +167,9 @@ export function Header() {
             <input
               type="text"
               className="p-3 border rounded-lg border-gray-500 w-full"
-              onChange={(e) => setName(e.target.value)}
+              value={nameClient}
+              onChange={(e) => setNameClient(e.target.value)}
+              required
             />
           </div>
 

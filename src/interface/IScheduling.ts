@@ -1,6 +1,5 @@
 export interface IScheduling {
   id: number;
-  date: Date | null;
-  hour: Date | null;
+  date_time: Date;
   client_name: string;
 }
