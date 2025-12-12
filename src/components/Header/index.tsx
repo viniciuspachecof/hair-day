@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, type FormEvent } from 'react';
+import { useContext, useState, type FormEvent } from 'react';
 import { containerHora } from './style';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
